@@ -1,0 +1,5 @@
+# Ignore unnecessary files and folders for Docker build
+.dockerignore
+.env
+docker-compose.yml
+Dockerfile

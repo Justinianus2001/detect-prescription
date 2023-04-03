@@ -1,0 +1,6 @@
+flask
+flask-cors
+opencv-python
+python_dotenv
+ultralytics
+vietocr
