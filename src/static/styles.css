@@ -31,7 +31,6 @@ form,
 }
 
 .header {
-    background-color: #E9EBEE;
     position: sticky;
     top: 0;
     text-align: center;
@@ -65,7 +64,7 @@ form,
 
 .image_preview,
 .result_preview {
-    width: 300px;
+    width: 500px;
     min-height: 100px;
     border: 2px solid #dddddd;
     margin: 15px 0;
@@ -81,4 +80,39 @@ form,
 .image_preview_image,
 .result_image {
     width: 100%;
+}
+
+:root {
+    --bg-color: #f5f5f5;
+    --text-color: #333;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+body.dark {
+    --bg-color: #333;
+    --text-color: #f5f5f5;
+}
+
+.btn-toggle-dark-mode {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+    margin-top: 1rem;
+}
+
+.toggle-icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+.sun-icon {
+    color: #f1c40f;
+}
+
+.moon-icon {
+    color: #f5f5f5;
 }

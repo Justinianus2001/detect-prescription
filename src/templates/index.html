@@ -17,23 +17,35 @@
 
 <body>
     <div class="header">
+        <i class="toggle-icon sun-icon fas fa-sun right" onclick="toggleDarkMode()"></i>
         <h3>
-            Detect drug name from prescription image
+            Detect drug name from image prescription
             <a href="https://github.com/Justinianus2001/detect-prescription" target="_blank">
                 <img src="{{ url_for('static', filename = 'github.ico') }}" alt="github.ico" class="icon">
             </a>
+            <br>
         </h3>
         <hr>
     </div>
     <form action="/" method="POST" enctype="multipart/form-data" id="form">
         <h2>Input</h2>
-        <input type="file" name="image" id="input_image" accept="image/*">
+        Choose text detect:
+        <input type="checkbox" id="select-all"> All
+        <br>
+        {% for label in lst.keys() %}
+            {% if loop.index != 1 %}
+            |
+            {% endif %}
+            <input type="checkbox" name="classes" value="{{ loop.index - 1 }}"
+            {% if loop.index in classes %} checked {% endif %}> {{ label.title() }}
+        {% endfor %}
+        <input type="file" name="image" class="form-control" id="input_image" accept="image/*">
         <br>
         <div class="image_preview" id="image_preview">
-            {% if url_for('uploaded_file', filename = detect_image) != '/uploads/' %}
-            <img src="{{ url_for('uploaded_file', filename = input_image) }}"  class="image_preview_image">
+            {% if input_image %}
+            <img src="data:image/png;base64,{{ input_image }}"  class="image_preview_image">
             {% else %}
-            <img src  class="image_preview_image">
+            <img src class="image_preview_image">
             {% endif %}
             <span class="image_preview_default_text">Prescription</span>
         </div>
@@ -43,20 +55,32 @@
     <div class="result">
         <h2>Output</h2>
         <div class="result_preview">
-            {% if url_for('uploaded_file', filename = detect_image) != '/uploads/' %}
-            <img src="{{ url_for('uploaded_file', filename = detect_image) }}" class="result_image">
+            {% if detect_image %}
+            <img src="data:image/png;base64,{{ detect_image }}" class="result_image">
             {% else %}
             <img src class="result_image">
             {% endif %}
         </div>
-        {% if drugnames | length != 0 %}
-        <p>Tên thuốc:</p>
-        <ol class="list_drug">
-            {% for drugname in drugnames %}
-            <li>{{ drugname }}</li>
+        {% if detect_image %}
+        <br>
+        <a href="data:image/png;base64,{{ detect_image }}" download>
+            <button class="btn btn-primary">Download</button>
+        </a>
+        <br>
+        <br>
+        <div class="left">
+            {% endif %}
+            {% for label in lst %}
+                {% if lst[label] | length != 0 %}
+                <b><p><u>{{ label.title() }}</u>:</p></b>
+                <ul>
+                    {% for text in lst[label] %}
+                    <li>{{ text }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
             {% endfor %}
-        </ol>
-        {% endif %}
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
@@ -99,10 +123,62 @@
                 previewImage.setAttribute("src", "");
             }
         });
-        
+
         form.addEventListener("submit", function () {
             button.disabled = true;
             button.innerHTML = "Detecting...";
+        });
+    </script>
+    <script>
+        const isDarkModeEnabled = localStorage.getItem('dark-mode-enabled');
+        const body = document.querySelector('body');
+
+        if (isDarkModeEnabled === 'true') {
+            body.classList.add('dark');
+            const icon = document.querySelector('.toggle-icon');
+            icon.classList.remove('sun-icon');
+            icon.classList.add('moon-icon');
+            icon.classList.replace('fa-sun', 'fa-moon');
+        }
+
+        function toggleDarkMode() {
+            body.classList.toggle('dark');
+
+            const icon = document.querySelector('.toggle-icon');
+            if (body.classList.contains('dark')) {
+                icon.classList.remove('sun-icon');
+                icon.classList.add('moon-icon');
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('dark-mode-enabled', 'true');
+            } else {
+                icon.classList.remove('moon-icon');
+                icon.classList.add('sun-icon');
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('dark-mode-enabled', 'false');
+            }
+        }
+    </script>
+    <script>
+        const selectAllCheckbox = document.getElementById("select-all");
+        const checkboxes = document.querySelectorAll("input[type='checkbox']:not(#select-all)");
+
+        selectAllCheckbox.addEventListener("change", function () {
+            for (let checkbox of checkboxes) {
+                checkbox.checked = this.checked;
+            }
+        });
+
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+                let allChecked = true;
+                for (let checkbox of checkboxes) {
+                    if (!checkbox.checked) {
+                        allChecked = false;
+                        break;
+                    }
+                }
+                selectAllCheckbox.checked = allChecked;
+            });
         });
     </script>
 </body>
