@@ -1,0 +1,16 @@
+# The Docker image that will be used to build your app
+image: docker:20
+services:
+  - docker:dind
+stages:
+  - build
+# Functions that should be executed before the build script is run
+before_script:
+  - docker version
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+build:
+  stage: build
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE .
+    - docker push $CI_REGISTRY_IMAGE
+  timeout: 1h

@@ -1,0 +1,14 @@
+# Ignore unnecessary files and folders for Docker build
+__pycache__/
+.dockerignore
+.env
+analyst.py
+crawl.py
+data/
+db_to_csv.py
+docker-compose.yml
+Dockerfile
+LICENSE
+README.md
+src/__pycache__/
+venv

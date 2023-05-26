@@ -1,0 +1,4 @@
+train: ./train
+val: ./train
+nc: 7
+names: ["date", "diagnose", "drugname", "quantity", "usage", "other", "corner"]

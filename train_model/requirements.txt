@@ -1,0 +1,5 @@
+craft-text-detector
+opencv-python
+python_dotenv
+ultralytics
+vietocr
